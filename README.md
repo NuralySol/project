@@ -1,0 +1,2 @@
+# Finance Tracking app (Django)
+
