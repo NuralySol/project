@@ -12,11 +12,31 @@ from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchan
 from plaid.model.transactions_get_request import TransactionsGetRequest
 from app_finance.plaid_client import client
 from datetime import date
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from .models import Transaction
+from .serializers import TransactionSerializer, ProfileSerializer
 import logging
 import json
 
 # Create a logger object
 logger = logging.getLogger(__name__)
+
+class TransactionListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        transactions = Transaction.objects.filter(user=request.user)
+        serializer = TransactionSerializer(transactions, many=True)
+        return Response(serializer.data)
+
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = ProfileSerializer(request.user.profile)
+        return Response(serializer.data)
 
 # Home page: Display the list of transactions (if any)
 def transaction_list(request):

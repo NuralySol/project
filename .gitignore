@@ -1,2 +1,58 @@
+# Environment files
+*.env
+*.local
 
-.env
+# Database
+db.sqlite3
+*.db
+*.sqlite3
+
+# Logs
+*.log
+debug.log
+
+# Python files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django files
+staticfiles/
+media/
+**/migrations/*.py
+!**/migrations/__init__.py
+
+# Dependencies
+Pipfile.lock
+poetry.lock
+requirements.txt
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.iml
+
+# Build files
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Temporary files
+*.bak
+*.tmp
+*.temp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Docker
+*.pid
+*.sock
+docker-compose.override.yml
+
+# Testing and coverage
+.coverage
+htmlcov/
+.cache/

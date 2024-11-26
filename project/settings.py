@@ -59,7 +59,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app_finance', #! This line was added to include the app_finance app in the project.
+    'rest_framework',    #! This line was added to include the rest_framework app in the project.
+    'django_extensions', #! This line was added to include the django_extensions app in the project.
+    'app_finance',       #! This line was added to include the app_finance app in the project.
 ]
 
 MIDDLEWARE = [
