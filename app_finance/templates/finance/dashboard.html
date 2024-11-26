@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <title>Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!-- Include Plotly library -->
 </head>
 <body>
     <h1>Dashboard</h1>
@@ -22,7 +23,7 @@
         </ul>
     {% endif %}
 
-    {% if transactions %}
+    {% if transactions_json %}
     <h2>Your Transactions</h2>
     <table border="1">
         <thead>
@@ -33,17 +34,62 @@
                 <th>Amount</th>
             </tr>
         </thead>
-        <tbody>
-            {% for transaction in transactions %}
-            <tr>
-                <td>{{ transaction.date }}</td>
-                <td>{{ transaction.name }}</td>
-                <td>{{ transaction.category }}</td>
-                <td>${{ transaction.amount }}</td>
-            </tr>
-            {% endfor %}
+        <tbody id="transactionTable">
+            <!-- Table rows will be dynamically added here -->
         </tbody>
     </table>
+
+    <!-- Plotly chart -->
+    <div id="transactionChart" style="width:100%;height:500px;"></div>
+
+    <script>
+        // Parse transactions JSON
+        const transactionData = JSON.parse('{{ transactions_json|escapejs }}');
+
+        // Populate the transaction table
+        const transactionTable = document.getElementById('transactionTable');
+        transactionData.forEach(transaction => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${transaction.date}</td>
+                <td>${transaction.name}</td>
+                <td>${transaction.category.join(", ")}</td>
+                <td>$${transaction.amount.toFixed(2)}</td>
+            `;
+            transactionTable.appendChild(row);
+        });
+
+        // Prepare data for Plotly
+        const dates = transactionData.map(item => item.date);
+        const amounts = transactionData.map(item => item.amount);
+
+        // Plotly configuration
+        const data = [
+            {
+                x: dates,
+                y: amounts,
+                type: 'bar',
+                marker: {
+                    color: 'rgba(55, 128, 191, 0.7)',
+                    line: {
+                        color: 'rgba(55, 128, 191, 1.0)',
+                        width: 2
+                    }
+                },
+            }
+        ];
+
+        const layout = {
+            title: 'Transactions Overview',
+            xaxis: { title: 'Date' },
+            yaxis: { title: 'Amount ($)' },
+        };
+
+        // Render Plotly chart after DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            Plotly.newPlot('transactionChart', data, layout);
+        });
+    </script>
     {% else %}
     <p>No transactions found. Connect to a sandbox item to get started.</p>
     <form method="post" action="{% url 'create_sandbox_item' %}">
@@ -51,6 +97,5 @@
         <button type="submit">Connect Custom Sandbox</button>
     </form>
     {% endif %}
-    
 </body>
 </html>
