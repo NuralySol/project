@@ -48,6 +48,8 @@
     <div id="transactionChart" style="width:100%;height:500px;"></div>
     <!-- Plotly pie chart -->
     <div id="expensePieChart" style="width:100%;height:500px;"></div>
+    <!-- Plotly table for other transactions -->
+    <div id="otherTransactionsTable" style="margin-top:20px;"></div>
 
     <script>
         // Parse transactions JSON
@@ -84,8 +86,12 @@
 
         // Helper function to render the Plotly bar chart
         function renderBarChart(filteredData) {
-            const names = filteredData.map(item => item.name);
-            const amounts = filteredData.map(item => item.amount);
+            // Sort data by amount in descending order
+            const sortedData = filteredData.sort((a, b) => b.amount - a.amount);
+
+            const topTransactions = sortedData.slice(0, 10);
+            const names = topTransactions.map(item => item.name);
+            const amounts = topTransactions.map(item => item.amount);
 
             const data = [
                 {
@@ -103,7 +109,7 @@
             ];
 
             const layout = {
-                title: 'Monthly Transactions Overview',
+                title: 'Top 10 Monthly Transactions',
                 xaxis: { title: 'Transaction Name' },
                 yaxis: { title: 'Amount ($)' },
             };
@@ -138,21 +144,45 @@
             Plotly.newPlot('expensePieChart', data, layout);
         }
 
-        // Helper function to adjust month dynamically
-        function adjustMonth(currentMonth, increment) {
-            const [year, month] = currentMonth.split('-').map(Number);
-            let newYear = year;
-            let newMonth = month + increment;
+        // Helper function to render the Plotly table for other transactions
+        function renderOtherTransactionsTable(filteredData) {
+            const sortedData = filteredData.sort((a, b) => b.amount - a.amount);
+            const otherTransactions = sortedData.slice(10);
 
-            if (newMonth > 12) {
-                newYear += 1;
-                newMonth = 1;
-            } else if (newMonth < 1) {
-                newYear -= 1;
-                newMonth = 12;
+            if (otherTransactions.length > 0) {
+                const dates = otherTransactions.map(item => item.date);
+                const names = otherTransactions.map(item => item.name);
+                const amounts = otherTransactions.map(item => `$${item.amount.toFixed(2)}`);
+
+                const data = [
+                    {
+                        type: 'table',
+                        header: {
+                            values: ['<b>Date</b>', '<b>Name</b>', '<b>Amount</b>'],
+                            align: 'center',
+                            line: { width: 1, color: 'black' },
+                            fill: { color: 'rgba(55, 128, 191, 0.7)' },
+                            font: { size: 12, color: 'white' }
+                        },
+                        cells: {
+                            values: [dates, names, amounts],
+                            align: 'center',
+                            line: { color: 'black', width: 1 },
+                            fill: { color: ['rgba(240, 240, 240, 0.5)', 'white'] },
+                            font: { size: 11 }
+                        }
+                    }
+                ];
+
+                const layout = {
+                    title: 'Other Transactions',
+                    margin: { l: 10, r: 10, t: 30, b: 10 }
+                };
+
+                Plotly.newPlot('otherTransactionsTable', data, layout);
+            } else {
+                document.getElementById('otherTransactionsTable').innerHTML = '<p>No additional transactions to display.</p>';
             }
-
-            return `${newYear}-${String(newMonth).padStart(2, '0')}`;
         }
 
         // Update the UI for a selected month
@@ -161,6 +191,7 @@
             populateTransactionTable(filteredData);
             renderBarChart(filteredData);
             renderPieChart(filteredData);
+            renderOtherTransactionsTable(filteredData);
         }
 
         // Initial population of the table and charts
