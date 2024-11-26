@@ -16,9 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as auth_views
 from app_finance import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.transaction_list, name='transaction_list'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='landing_page'), name='logout'),
+    path('', views.landing_page, name='landing_page'),
+    path('signup/', views.signup, name='signup'),
+    path('login/', auth_views.LoginView.as_view(template_name='finance/login.html'), name='login'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+]
+# Add the URL pattern for the fetch_transactions view to fetch transactions from Plaid.
+urlpatterns += [
+    path('plaid/sandbox/create/', views.create_sandbox_item, name='create_sandbox_item'),
+    path('plaid/fetch/', views.fetch_transactions, name='fetch_transactions'),
+    path('plaid/sandbox/', views.plaid_sandbox, name='plaid_sandbox'),
 ]

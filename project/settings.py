@@ -11,10 +11,29 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+import logging
+
+# logger to log messages
+logger = logging.getLogger(__name__)
+
+# Load the environmental variables from the .env file
+load_dotenv()
+
+#! Plaid API integration settings (need to get the keys from Plaid)
+#! Point to .env file for the envoronmental variables use the dotenv package to load the variables.
+
+PLAID_CLIENT_ID = os.getenv("PLAID_CLIENT_ID")
+PLAID_SECRET = os.getenv("PLAID_SECRET")
+PLAID_ENV = os.getenv("PLAID_ENV")
+
+logger.info(f"PLAID_CLIENT_ID: {PLAID_CLIENT_ID}")
+logger.info(f"PLAID_SECRET: {PLAID_SECRET}")
+logger.info(f"PLAID_ENV: {PLAID_ENV}")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -27,6 +46,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Login and logout settings, and redirection 
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 # Application definition
 
@@ -122,3 +144,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

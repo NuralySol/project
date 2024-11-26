@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Finance Tracker</title>
+</head>
+<body>
+    <h1>Welcome to the Finance Tracker</h1>
+    {% if user.is_authenticated %}
+        <p>Hello, {{ user.username }}! 
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </p>
+        <p><a href="{% url 'plaid_sandbox' %}">Connect to Plaid Sandbox</a></p>
+    {% else %}
+        <p><a href="{% url 'login' %}">Login</a> to manage your finances.</p>
+    {% endif %}
+</body>
+</html>
