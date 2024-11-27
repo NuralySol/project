@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from app_finance.models import Profile
 
-
+#! This is a script to import the Users (IE the admin) before the creation of the Profile model
 class Command(BaseCommand):
     help = "Backfill profiles for existing users without a profile"
 

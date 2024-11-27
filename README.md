@@ -32,4 +32,3 @@
 - Output:
   - `.dot` file for further customizations.
   - `.png` file for quick visualization.
-- **Interactive Preview**: Use the [Graphviz Interactive Preview](https://marketplace.visualstudio.com/items?itemName=EFanZh.graphviz-preview) VS Code extension for better `.dot` file visualization.
