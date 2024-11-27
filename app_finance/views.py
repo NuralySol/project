@@ -19,8 +19,10 @@ from .models import Transaction
 from .serializers import TransactionSerializer, ProfileSerializer
 import logging
 import json
+import time
+from plaid.exceptions import ApiException
 
-# Create a logger object
+# Logger setup
 logger = logging.getLogger(__name__)
 
 class TransactionListView(APIView):
@@ -38,7 +40,7 @@ class ProfileView(APIView):
         serializer = ProfileSerializer(request.user.profile)
         return Response(serializer.data)
 
-# Home page: Display the list of transactions (if any)
+# Home page
 def transaction_list(request):
     transactions = Transaction.objects.all()
     return render(request, 'finance/transaction_list.html', {'transactions': transactions})
@@ -48,47 +50,62 @@ def fetch_transactions(request):
     try:
         access_token = request.user.profile.plaid_access_token
         if not access_token:
-            raise ValueError("Access token not found for the user.")
+            messages.error(request, "Access token not found. Please link a sandbox account first.")
+            return redirect('plaid_sandbox')
 
-        start_date = date(2024, 7, 27)  # This is the start date of the custom fixture
+        start_date = date(2024, 1, 1)
         end_date = date.today()
 
-        # Debugging: Print request parameters and see if there are any mistakes 
-        print(f"DEBUG: Access Token: {access_token}")
-        print(f"DEBUG: Start Date: {start_date}")
-        print(f"DEBUG: End Date: {end_date}")
+        for _ in range(3):  # Retry up to 3 times
+            try:
+                # Request transactions from Plaid
+                request_body = TransactionsGetRequest(
+                    access_token=access_token,
+                    start_date=start_date,
+                    end_date=end_date
+                )
 
-        request_body = TransactionsGetRequest(
-            access_token=access_token,
-            start_date=start_date,
-            end_date=end_date
-        )
+                response = client.transactions_get(request_body)
+                response_dict = response.to_dict()
 
-        # Debugging: Print the request body - request body
-        print(f"DEBUG: TransactionsGetRequest: {request_body}")
+                # Extract transactions and serialize date fields
+                transactions = response_dict.get("transactions", [])
+                serialized_transactions = [
+                    {
+                        **t,
+                        "date": t.get("date").isoformat() if t.get("date") else None,
+                        "authorized_date": t.get("authorized_date").isoformat() if t.get("authorized_date") else None
+                    }
+                    for t in transactions
+                ]
 
-        response = client.transactions_get(request_body)
-        response_dict = response.to_dict()
+                # Pass the serialized transactions to the template
+                return render(request, 'finance/plaid_transactions.html', {'transactions': serialized_transactions})
 
-        # Debugging: Print the full response from Plaid 
-        print(f"DEBUG: Full TransactionsGet Response: {response_dict}")
+            except ApiException as e:
+                error_response = json.loads(e.body)
+                error_code = error_response.get("error_code", "UNKNOWN")
+                if error_code == "PRODUCT_NOT_READY":
+                    logger.warning("Product not ready, retrying in 5 seconds...")
+                    time.sleep(5)  # Wait 5 seconds before retrying
+                else:
+                    raise
 
-        transactions = response_dict.get("transactions", [])
-        
-        # Debugging: Print the extracted transactions - get the extracted transactions
-        print(f"DEBUG: Extracted Transactions: {transactions}")
+        messages.error(request, "Transactions are not ready. Please try again later.")
+        return redirect('dashboard')
 
-        if not transactions:
-            print("DEBUG: No transactions found in the API response.")
-
-        return render(request, 'finance/plaid_transactions.html', {'transactions': transactions})
+    except ApiException as e:
+        error_response = json.loads(e.body)
+        error_message = error_response.get("error_message", "Unknown error")
+        logger.error(f"Plaid API error: {error_message}", exc_info=True)
+        messages.error(request, f"Plaid API error: {error_message}")
     except Exception as e:
-        # Debugging: Print the error message - if there are any errors with try and except
-        print(f"ERROR: Error fetching transactions: {e}")
         logger.error(f"Error fetching transactions: {e}", exc_info=True)
         messages.error(request, f"Error fetching transactions: {str(e)}")
-        return redirect('dashboard')
-    
+
+    return redirect('dashboard')
+
+    return redirect('dashboard')
 # Landing page
 def landing_page(request):
     return render(request, 'finance/landing_page.html')
@@ -105,7 +122,6 @@ def signup(request):
         form = UserCreationForm()
     return render(request, 'finance/signup.html', {'form': form})
 
-# Dashboard: Fetch Transactions and Display them
 @login_required
 def dashboard(request):
     transactions = []
@@ -140,79 +156,71 @@ def dashboard(request):
         serialized_transactions = json.dumps([
             {
                 **t,
-                "date": t.get("date").isoformat() if t.get("date") else None,  # Serialize date
-                "authorized_date": t.get("authorized_date").isoformat() if t.get("authorized_date") else None  # Serialize authorized_date
-            } for t in transactions
+                "date": str(t.get("date")) if t.get("date") else None,  # Ensure date is serialized as a string
+                "authorized_date": str(t.get("authorized_date")) if t.get("authorized_date") else None  # Ensure authorized_date is serialized as a string
+            }
+            for t in transactions
         ])
         logger.debug(f"Serialized Transactions for Template: {serialized_transactions}")
 
         # Pass the serialized transactions to the template
         return render(request, 'finance/dashboard.html', {'transactions_json': serialized_transactions})
 
+    except ApiException as e:
+        error_response = json.loads(e.body)
+        error_message = error_response.get("error_message", "Unknown error")
+        logger.error(f"Plaid API error: {error_message}", exc_info=True)
+        messages.error(request, f"Plaid API error: {error_message}")
     except Exception as e:
         logger.error(f"Error fetching transactions: {e}", exc_info=True)
         messages.error(request, f"Error fetching transactions: {str(e)}")
-        return render(request, 'finance/dashboard.html', {'transactions_json': '[]'})
-    
-# Plaid sandbox setup and redirection
+
+    return render(request, 'finance/dashboard.html', {'transactions_json': '[]'})
+
 @login_required
 def plaid_sandbox(request):
-    client = plaid_api.PlaidApi()
     try:
         pt_request = SandboxPublicTokenCreateRequest(
             institution_id='ins_109508',
             initial_products=[Products('transactions')]
         )
         pt_response = client.sandbox_public_token_create(pt_request)
-        public_token = pt_response.to_dict()['public_token']
+        public_token = pt_response.public_token
 
         exchange_request = ItemPublicTokenExchangeRequest(public_token=public_token)
         exchange_response = client.item_public_token_exchange(exchange_request)
 
-        access_token = exchange_response.to_dict()['access_token']
-
-        # Store access token in user's profile
+        access_token = exchange_response.access_token
         request.user.profile.plaid_access_token = access_token
         request.user.profile.save()
 
         messages.success(request, "Sandbox account linked successfully!")
         return redirect('dashboard')
-
     except Exception as e:
+        logger.error(f"Error linking sandbox account: {e}", exc_info=True)
         messages.error(request, f"Error linking sandbox account: {str(e)}")
         return redirect('dashboard')
-    
+
 @login_required
 def create_sandbox_item(request):
     try:
-        # Request body for creating a sandbox item
         request_body = SandboxPublicTokenCreateRequest(
             institution_id='ins_109508',
-            initial_products=[Products('transactions')],
-            options={
-                "override_username": "custom_nuraly"  # Custom sandbox username
-            }
+            initial_products=[Products('transactions')]
         )
-        logger.debug(f"Creating Sandbox Item with Body: {request_body}")
 
-        # Fetch public token from Plaid
         response = client.sandbox_public_token_create(request_body)
         public_token = response.public_token
-        logger.info(f"Sandbox Public Token created: {public_token}")
 
-        # Exchange the public token for an access token
         exchange_request = ItemPublicTokenExchangeRequest(public_token=public_token)
         exchange_response = client.item_public_token_exchange(exchange_request)
         access_token = exchange_response.access_token
-        logger.info(f"Access Token exchanged: {access_token}")
 
-        # Save the access token in the user's profile
         request.user.profile.plaid_access_token = access_token
         request.user.profile.save()
 
-        messages.success(request, "Custom sandbox user connected successfully!")
         return JsonResponse({"success": True, "access_token": access_token})
-
     except Exception as e:
         logger.error(f"Error creating sandbox item: {e}", exc_info=True)
         return JsonResponse({"success": False, "error": str(e)})
+
