@@ -56,3 +56,6 @@ docker-compose.override.yml
 .coverage
 htmlcov/
 .cache/
+
+# Dot file
+my_project.dot
