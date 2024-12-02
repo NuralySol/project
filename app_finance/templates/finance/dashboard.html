@@ -7,6 +7,7 @@
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <title>Dashboard</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!-- Include Plotly library script -->
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">  <!-- Include custom CSS file -->
 </head>
 <body>
     <h1>Dashboard</h1>
@@ -85,10 +86,10 @@
             filteredData.forEach(transaction => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${transaction.date}</td>
-                    <td>${transaction.name}</td>
-                    <td>${transaction.category.join(", ")}</td>
-                    <td>$${transaction.amount.toFixed(2)}</td>
+                <td>${transaction.date || 'N/A'}</td>
+                <td>${transaction.name || 'N/A'}</td>
+                <td>${Array.isArray(transaction.category) ? transaction.category.join(", ") : 'Uncategorized'}</td>
+                <td>$${transaction.amount?.toFixed(2) || '0.00'}</td>
                 `;
                 transactionTable.appendChild(row);
             });

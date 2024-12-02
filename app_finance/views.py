@@ -108,7 +108,7 @@ def fetch_transactions(request):
 def landing_page(request):
     return render(request, 'finance/landing_page.html')
 
-# User signup page
+# Abstract User signup page with UserCreationForm
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -119,7 +119,7 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'finance/signup.html', {'form': form})
-
+# User deletion function with @login_required decorator
 @login_required
 def user_delete(request):
     if request.method == 'POST':
