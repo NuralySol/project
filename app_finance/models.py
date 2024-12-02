@@ -4,7 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.timezone import now
 
-
+# Abstract User when creating a Profile (extends the Django user without being an admin)
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     plaid_access_token = models.CharField(max_length=255, blank=True, null=True)

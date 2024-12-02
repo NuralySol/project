@@ -54,6 +54,9 @@
     <div id="expensePieChart" style="width:100%;height:500px;"></div>
     <!-- Plotly table for other transactions -->
     <div id="otherTransactionsTable" style="margin-top:20px;"></div>
+    <!-- Add a new section for Income vs. Expenses -->
+    <h2>Income vs. Expenses</h2>
+    <div id="incomeExpenseChart" style="width:100%;height:500px;"></div>
 
     <script>
         // Function to adjust month by increment or decrement
@@ -194,15 +197,52 @@
                 document.getElementById('otherTransactionsTable').innerHTML = '<p>No additional transactions to display.</p>';
             }
         }
+        // Helper function to categorize and render the Income vs. Expenses chart
+function renderIncomeExpenseChart(filteredData) {
+    // Categorize transactions
+    const incomeRefunds = filteredData.filter(transaction => transaction.amount < 0);
+    const expenses = filteredData.filter(transaction => transaction.amount > 0);
+
+    // Calculate totals
+    const incomeTotal = incomeRefunds.reduce((sum, transaction) => sum + Math.abs(transaction.amount), 0);
+    const expensesTotal = expenses.reduce((sum, transaction) => sum + transaction.amount, 0);
+
+    // Prepare data for the chart
+    const data = [
+        {
+            x: ['Income/Refunds', 'Expenses'],
+            y: [incomeTotal, expensesTotal],
+            type: 'bar',
+            marker: {
+                color: ['rgba(50, 171, 96, 0.7)', 'rgba(219, 64, 82, 0.7)'], // Different colors for categories
+                line: {
+                    color: ['rgba(50, 171, 96, 1.0)', 'rgba(219, 64, 82, 1.0)'],
+                    width: 2,
+                },
+            },
+        },
+    ];
+
+    const layout = {
+        title: 'Income/Refunds vs. Expenses',
+        xaxis: { title: 'Category' },
+        yaxis: { title: 'Total Amount ($)' },
+    };
+
+    Plotly.newPlot('incomeExpenseChart', data, layout);
+}
+
+
     
-        // Update the UI for a selected month
-        function updateUIForMonth(month) {
-            const filteredData = filterTransactionsByMonth(month);
-            populateTransactionTable(filteredData);
-            renderBarChart(filteredData);
-            renderPieChart(filteredData);
-            renderOtherTransactionsTable(filteredData);
-        }
+        // Update the UI function to include this new chart
+    function updateUIForMonth(month) {
+        const filteredData = filterTransactionsByMonth(month);
+        populateTransactionTable(filteredData);
+        renderBarChart(filteredData);
+        renderPieChart(filteredData);
+        renderOtherTransactionsTable(filteredData);
+        renderIncomeExpenseChart(filteredData); 
+}
     
         // Initial population of the table and charts
         const monthSelector = document.getElementById('monthSelector');

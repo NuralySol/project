@@ -9,7 +9,6 @@ from app_finance.views import TransactionListView, ProfileView
 
 # Define router for API endpoints
 router = DefaultRouter()
-# You can add routes here for ViewSets if used
 
 urlpatterns = [
     # Admin URL
@@ -29,7 +28,7 @@ urlpatterns = [
     path('plaid/fetch/', views.fetch_transactions, name='fetch_transactions'),
     path('plaid/sandbox/', views.plaid_sandbox, name='plaid_sandbox'),
 
-    # API Endpoints
+    # API Endpoints RESTfull Django
     path('api/transactions/', TransactionListView.as_view(), name='api_transactions'),
     path('api/profile/', ProfileView.as_view(), name='api_profile'),
 ]
