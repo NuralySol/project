@@ -56,14 +56,23 @@
     <div id="otherTransactionsTable" style="margin-top:20px;"></div>
 
     <script>
+        // Function to adjust month by increment or decrement
+        function adjustMonth(currentMonth, step) {
+            const [year, month] = currentMonth.split('-').map(Number);
+            const newDate = new Date(year, month - 1 + step);
+            const newYear = newDate.getFullYear();
+            const newMonth = String(newDate.getMonth() + 1).padStart(2, '0');
+            return `${newYear}-${newMonth}`;
+        }
+    
         // Parse transactions JSON
         const transactionData = JSON.parse('{{ transactions_json|escapejs }}');
-
+    
         // Helper function to populate the transaction table
         function populateTransactionTable(filteredData) {
             const transactionTable = document.getElementById('transactionTable');
             transactionTable.innerHTML = ''; // Clear existing rows
-
+    
             filteredData.forEach(transaction => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -75,7 +84,7 @@
                 transactionTable.appendChild(row);
             });
         }
-
+    
         // Helper function to filter transactions by month
         function filterTransactionsByMonth(month) {
             return transactionData.filter(transaction => {
@@ -87,16 +96,14 @@
                 );
             });
         }
-
+    
         // Helper function to render the Plotly bar chart
         function renderBarChart(filteredData) {
-            // Sort data by amount in descending order
             const sortedData = filteredData.sort((a, b) => b.amount - a.amount);
-
             const topTransactions = sortedData.slice(0, 10);
             const names = topTransactions.map(item => item.name);
             const amounts = topTransactions.map(item => item.amount);
-
+    
             const data = [
                 {
                     x: names,
@@ -111,26 +118,25 @@
                     },
                 }
             ];
-
+    
             const layout = {
                 title: 'Top 10 Monthly Transactions',
                 xaxis: { title: 'Transaction Name' },
                 yaxis: { title: 'Amount ($)' },
             };
-
+    
             Plotly.newPlot('transactionChart', data, layout);
         }
-
+    
         // Helper function to render the Plotly pie chart
         function renderPieChart(filteredData) {
-            // Sort and get top 5 expenses
             const topExpenses = [...filteredData]
                 .sort((a, b) => b.amount - a.amount)
                 .slice(0, 5);
-
+    
             const labels = topExpenses.map(item => item.name);
             const values = topExpenses.map(item => item.amount);
-
+    
             const data = [
                 {
                     labels: labels,
@@ -140,24 +146,24 @@
                     insidetextorientation: 'radial',
                 }
             ];
-
+    
             const layout = {
                 title: 'Top 5 Monthly Expenses',
             };
-
+    
             Plotly.newPlot('expensePieChart', data, layout);
         }
-
+    
         // Helper function to render the Plotly table for other transactions
         function renderOtherTransactionsTable(filteredData) {
             const sortedData = filteredData.sort((a, b) => b.amount - a.amount);
             const otherTransactions = sortedData.slice(10);
-
+    
             if (otherTransactions.length > 0) {
                 const dates = otherTransactions.map(item => item.date);
                 const names = otherTransactions.map(item => item.name);
                 const amounts = otherTransactions.map(item => `$${item.amount.toFixed(2)}`);
-
+    
                 const data = [
                     {
                         type: 'table',
@@ -177,18 +183,18 @@
                         }
                     }
                 ];
-
+    
                 const layout = {
                     title: 'Other Transactions',
                     margin: { l: 10, r: 10, t: 30, b: 10 }
                 };
-
+    
                 Plotly.newPlot('otherTransactionsTable', data, layout);
             } else {
                 document.getElementById('otherTransactionsTable').innerHTML = '<p>No additional transactions to display.</p>';
             }
         }
-
+    
         // Update the UI for a selected month
         function updateUIForMonth(month) {
             const filteredData = filterTransactionsByMonth(month);
@@ -197,36 +203,35 @@
             renderPieChart(filteredData);
             renderOtherTransactionsTable(filteredData);
         }
-
+    
         // Initial population of the table and charts
         const monthSelector = document.getElementById('monthSelector');
         const previousMonthBtn = document.getElementById('previousMonthBtn');
         const nextMonthBtn = document.getElementById('nextMonthBtn');
-
+    
         monthSelector.addEventListener('change', () => {
             const selectedMonth = monthSelector.value;
             if (selectedMonth) {
                 updateUIForMonth(selectedMonth);
             }
         });
-
+    
         previousMonthBtn.addEventListener('click', () => {
             const currentMonth = monthSelector.value;
             const previousMonth = adjustMonth(currentMonth, -1);
             monthSelector.value = previousMonth;
             updateUIForMonth(previousMonth);
         });
-
+    
         nextMonthBtn.addEventListener('click', () => {
             const currentMonth = monthSelector.value;
             const nextMonth = adjustMonth(currentMonth, 1);
             monthSelector.value = nextMonth;
             updateUIForMonth(nextMonth);
         });
-
-        // Set default to current month
-        const currentDate = new Date();
-        const defaultMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+    
+        // Set default to October 2024
+        const defaultMonth = '2024-10';
         monthSelector.value = defaultMonth;
         updateUIForMonth(defaultMonth);
     </script>

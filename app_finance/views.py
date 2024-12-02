@@ -105,7 +105,6 @@ def fetch_transactions(request):
 
     return redirect('dashboard')
 
-    return redirect('dashboard')
 # Landing page
 def landing_page(request):
     return render(request, 'finance/landing_page.html')
