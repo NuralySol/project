@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.http import JsonResponse
-from .models import Transaction
+from .models import Transaction, Profile
 from plaid.api import plaid_api
 from plaid.model.sandbox_public_token_create_request import SandboxPublicTokenCreateRequest
 from plaid.model.products import Products
@@ -15,7 +15,6 @@ from datetime import date
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .models import Transaction
 from .serializers import TransactionSerializer, ProfileSerializer
 import logging
 import json
@@ -120,6 +119,20 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'finance/signup.html', {'form': form})
+
+@login_required
+def user_delete(request):
+    if request.method == 'POST':
+        confirmation = request.POST.get('confirmation')
+        if confirmation == request.user.username:
+            user = request.user
+            user.delete()
+            messages.success(request, "Your account has been deleted successfully.")
+            return redirect('landing_page')
+        else:
+            messages.error(request, "Username confirmation failed. Please try again.")
+    
+    return render(request, 'finance/user_delete.html')
 
 @login_required
 def dashboard(request):

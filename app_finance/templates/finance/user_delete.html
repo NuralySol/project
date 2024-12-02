@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Account</title>
+</head>
+<body>
+    <h1>Delete Account</h1>
+    <p>Are you sure you want to delete your account, <strong>{{ user.username }}</strong>? This action cannot be undone.</p>
+    
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    <form method="post" action="{% url 'user_delete' %}">
+        {% csrf_token %}
+        <label for="confirmation">Type <strong>{{ user.username }}</strong> to confirm:</label>
+        <input type="text" id="confirmation" name="confirmation" required>
+        <button type="submit">Delete My Account</button>
+    </form>
+
+    <a href="{% url 'dashboard' %}">Cancel</a>
+</body>
+</html>

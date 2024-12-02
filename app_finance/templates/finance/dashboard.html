@@ -6,16 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <title>Dashboard</title>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!-- Include Plotly library -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!-- Include Plotly library script -->
 </head>
 <body>
     <h1>Dashboard</h1>
     <p>Welcome, {{ user.username }}!</p>
 
+    <!-- Logout and Delete User Buttons -->
     <form method="post" action="{% url 'logout' %}" style="display: inline;">
         {% csrf_token %}
         <button type="submit">Logout</button>
     </form>
+
+    <!-- New Delete User Button -->
+    <a href="{% url 'user_delete' %}" style="margin-left: 10px;">
+        <button type="button" style="background-color: red; color: white;">Delete Account</button>
+    </a>
 
     <hr>
 
