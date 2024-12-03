@@ -8,13 +8,21 @@
     <link rel="stylesheet" href="{% static 'css/signup.css' %}">
     <title>Sign Up</title>
 </head>
-<body>
-    <h1>Sign Up</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Sign Up</button>
-    </form>
-    <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+<body class="signup-body">
+    <div class="signup-container">
+        <header class="signup-header">
+            <h1 class="signup-title">Sign Up</h1>
+        </header>
+        <form method="post" class="signup-form">
+            {% csrf_token %}
+            <div class="form-fields">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-signup">Sign Up</button>
+        </form>
+        <p class="login-link">
+            Already have an account? <a href="{% url 'login' %}" class="login-link-text">Log in</a>
+        </p>
+    </div>
 </body>
 </html>

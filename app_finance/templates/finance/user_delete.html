@@ -8,25 +8,31 @@
     <link rel="stylesheet" href="{% static 'css/user_delete.css' %}">
     <title>Delete Account</title>
 </head>
-<body>
-    <h1>Delete Account</h1>
-    <p>Are you sure you want to delete your account, <strong>{{ user.username }}</strong>? This action cannot be undone.</p>
-    
-    {% if messages %}
-        <ul>
+<body class="delete-body">
+    <div class="delete-container">
+        <h1 class="delete-title">Delete Account</h1>
+        <p class="delete-warning">
+            Are you sure you want to delete your account, <strong class="delete-username">{{ user.username }}</strong>? This action cannot be undone.
+        </p>
+
+        {% if messages %}
+        <ul class="delete-messages">
             {% for message in messages %}
-                <li class="{{ message.tags }}">{{ message }}</li>
+                <li class="delete-message {{ message.tags }}">{{ message }}</li>
             {% endfor %}
         </ul>
-    {% endif %}
-    
-    <form method="post" action="{% url 'user_delete' %}">
-        {% csrf_token %}
-        <label for="confirmation">Type <strong>{{ user.username }}</strong> to confirm:</label>
-        <input type="text" id="confirmation" name="confirmation" required>
-        <button type="submit">Delete My Account</button>
-    </form>
+        {% endif %}
 
-    <a href="{% url 'dashboard' %}">Cancel</a>
+        <form class="delete-form" method="post" action="{% url 'user_delete' %}">
+            {% csrf_token %}
+            <div class="delete-field">
+                <label class="delete-label" for="confirmation">Type <strong>{{ user.username }}</strong> to confirm:</label>
+                <input class="delete-input" type="text" id="confirmation" name="confirmation" required>
+            </div>
+            <button class="btn btn-delete" type="submit">Delete My Account</button>
+        </form>
+
+        <a class="btn btn-cancel" href="{% url 'dashboard' %}">Cancel</a>
+    </div>
 </body>
 </html>

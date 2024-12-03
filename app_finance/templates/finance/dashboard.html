@@ -7,21 +7,21 @@
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <title>Dashboard</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!-- Include Plotly library script -->
-    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">  <!-- Include custom CSS file -->
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">  
 </head>
 <body>
     <h1>Dashboard</h1>
     <p>Welcome, {{ user.username }}!</p>
 
     <!-- Logout and Delete User Buttons -->
-    <form method="post" action="{% url 'logout' %}" style="display: inline;">
+    <form method="post" action="{% url 'logout' %}" class="logout-form">
         {% csrf_token %}
-        <button type="submit">Logout</button>
+        <button type="submit" class="logout-button">Logout</button>
     </form>
 
     <!-- New Delete User Button -->
-    <a href="{% url 'user_delete' %}" style="margin-left: 10px;">
-        <button type="button" style="background-color: red; color: white;">Delete Account</button>
+    <a href="{% url 'user_delete' %}" class="delete-account-link">
+        <button type="button" class="delete-account-button">Delete Account</button>
     </a>
 
     <hr>
@@ -204,54 +204,77 @@
                 document.getElementById('otherTransactionsTable').innerHTML = '<p>No additional transactions to display.</p>';
             }
         }
-        // Helper function to categorize and render the Income vs. Expenses chart
-function renderIncomeExpenseChart(filteredData) {
-    // Categorize transactions
-    const incomeRefunds = filteredData.filter(transaction => transaction.amount < 0);
-    const expenses = filteredData.filter(transaction => transaction.amount > 0);
-
-    // Calculate totals
-    const incomeTotal = incomeRefunds.reduce((sum, transaction) => sum + Math.abs(transaction.amount), 0);
-    const expensesTotal = expenses.reduce((sum, transaction) => sum + transaction.amount, 0);
-
-    // Prepare data for the chart
-    const data = [
-        {
-            x: ['Income/Refunds', 'Expenses'],
-            y: [incomeTotal, expensesTotal],
-            type: 'bar',
-            marker: {
-                color: ['rgba(50, 171, 96, 0.7)', 'rgba(219, 64, 82, 0.7)'], // Different colors for categories
-                line: {
-                    color: ['rgba(50, 171, 96, 1.0)', 'rgba(219, 64, 82, 1.0)'],
-                    width: 2,
+        function renderIncomeExpenseChart(filteredData) {
+            console.log("Filtered Data:", filteredData); // Debugging output
+        
+            // Categorize transactions
+            const incomeRefunds = filteredData.filter(transaction => transaction.amount < 0);
+            const expenses = filteredData.filter(transaction => transaction.amount > 0);
+        
+            console.log("Income/Refunds:", incomeRefunds); // Debugging output
+            console.log("Expenses:", expenses); // Debugging output
+        
+            // If no refunds, do not render the chart
+            if (incomeRefunds.length === 0) {
+                document.getElementById('incomeExpenseChart').innerHTML = ''; // Clear the chart container
+                console.log("No refunds found; skipping chart rendering."); // Debugging output
+                return;
+            }
+        
+            // Calculate totals
+            const incomeTotal = incomeRefunds.reduce((sum, transaction) => sum + Math.abs(transaction.amount || 0), 0);
+            const expensesTotal = expenses.reduce((sum, transaction) => sum + (transaction.amount || 0), 0);
+        
+            console.log("Income Total:", incomeTotal); // Debugging output
+            console.log("Expenses Total:", expensesTotal); // Debugging output
+        
+            // Check if there's no data to display
+            if (incomeTotal === 0 && expensesTotal === 0) {
+                document.getElementById('incomeExpenseChart').innerHTML = '<p>No Income or Expenses recorded for this month.</p>';
+                return;
+            }
+        
+            // Prepare data for the chart
+            const data = [
+                {
+                    x: ['Income/Refunds', 'Expenses'],
+                    y: [incomeTotal, expensesTotal],
+                    type: 'bar',
+                    marker: {
+                        color: ['rgba(50, 171, 96, 0.7)', 'rgba(219, 64, 82, 0.7)'], // Different colors for categories
+                        line: {
+                            color: ['rgba(50, 171, 96, 1.0)', 'rgba(219, 64, 82, 1.0)'],
+                            width: 2,
+                        },
+                    },
                 },
-            },
-        },
-    ];
-
-    const layout = {
-        title: 'Income/Refunds vs. Expenses',
-        xaxis: { title: 'Category' },
-        yaxis: { title: 'Total Amount ($)' },
-    };
-
-    Plotly.newPlot('incomeExpenseChart', data, layout);
-}
+            ];
+        
+            // Chart layout
+            const layout = {
+                title: 'Income/Refunds vs. Expenses',
+                xaxis: { title: 'Category' },
+                yaxis: { title: 'Total Amount ($)' },
+            };
+        
+            // Render the chart
+            Plotly.newPlot('incomeExpenseChart', data, layout);
+        }
 
 
     
         // Update the UI function to include this new chart
-    function updateUIForMonth(month) {
-        const filteredData = filterTransactionsByMonth(month);
-        populateTransactionTable(filteredData);
-        renderBarChart(filteredData);
-        renderPieChart(filteredData);
-        renderOtherTransactionsTable(filteredData);
-        renderIncomeExpenseChart(filteredData); 
-}
+        function updateUIForMonth(month) {
+            const filteredData = filterTransactionsByMonth(month);
+            console.log("Updating UI for month:", month); // Debugging output
+            populateTransactionTable(filteredData);
+            renderBarChart(filteredData);
+            renderPieChart(filteredData);
+            renderOtherTransactionsTable(filteredData);
+            renderIncomeExpenseChart(filteredData); // Ensure this is called
+        }
     
-        // Initial population of the table and charts
+        // Initial population of the table and charts   
         const monthSelector = document.getElementById('monthSelector');
         const previousMonthBtn = document.getElementById('previousMonthBtn');
         const nextMonthBtn = document.getElementById('nextMonthBtn');

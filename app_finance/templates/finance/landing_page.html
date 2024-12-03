@@ -8,18 +8,33 @@
     <link rel="stylesheet" href="{% static 'css/landing_page.css' %}">
     <title>Finance Tracker</title>
 </head>
-<body>
-    <h1>Welcome to the Finance Tracker</h1>
-    {% if user.is_authenticated %}
-        <p>Hello, {{ user.username }}! 
-            <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit">Logout</button>
-            </form>
-        </p>
-        <p><a href="{% url 'plaid_sandbox' %}">Connect to Plaid Sandbox</a></p>
-    {% else %}
-        <p><a href="{% url 'login' %}">Login</a> to manage your finances.</p>
-    {% endif %}
+<body class="landing-page-body">
+    <div class="landing-page-container">
+        <header class="landing-page-header">
+            <h1 class="landing-page-title">Welcome to the Finance Tracker</h1>
+        </header>
+        <main class="landing-page-main">
+            {% if user.is_authenticated %}
+                <section class="user-auth-section">
+                    <p class="user-greeting">
+                        Hello, <span class="user-name">{{ user.username }}</span>!
+                    </p>
+                    <form method="post" action="{% url 'logout' %}" class="logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-button">Logout</button>
+                    </form>
+                    <p class="plaid-link">
+                        <a href="{% url 'plaid_sandbox' %}" class="plaid-sandbox-link">Connect to Plaid Sandbox</a>
+                    </p>
+                </section>
+            {% else %}
+                <section class="guest-section">
+                    <p class="guest-message"> 
+                        <a href="{% url 'login' %}" class="login-link">Login</a> to manage your finances.
+                    </p>
+                </section>
+            {% endif %}
+        </main>
+    </div>
 </body>
 </html>
