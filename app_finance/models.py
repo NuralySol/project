@@ -21,12 +21,12 @@ def create_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
 
-
+# Automatically save the Profile when the User is saved
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
-
+# Transaction model to store the transactions
 class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='transactions')
     plaid_transaction_id = models.CharField(max_length=255, blank=True, null=True)

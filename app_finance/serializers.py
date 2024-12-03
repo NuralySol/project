@@ -7,7 +7,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ['user', 'plaid_access_token']
 
-# Serializer for Transaction model
+# Serializer for Transaction model. 
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction

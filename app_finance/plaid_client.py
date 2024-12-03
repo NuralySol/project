@@ -5,7 +5,7 @@ from django.conf import settings
 import logging
 
 logger = logging.getLogger(__name__)
-
+# Plaid API client configuration. This is used to make requests to the Plaid API.
 configuration = Configuration(
     host=settings.PLAID_ENV,
     api_key={
