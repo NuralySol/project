@@ -132,7 +132,6 @@ To map and visualize the database schema effectively, the following tools and co
 
 - **Environment Setup**:
   - All sensitive keys and environment variables are stored in `.env` files.
-  - Used `python-decouple` to load environment variables securely in Django settings.
 
 - **🚨 Error Handling**:
   - Detailed logging for debugging and monitoring:
