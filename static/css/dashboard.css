@@ -7,53 +7,59 @@ body, h1, p, ul, li, button, form, table, input, a {
 
 /* Body Styling */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(to right, #f4f4f9, #e9ecef);
     color: #333;
     line-height: 1.6;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    overflow-x: hidden;
 }
 
 /* Header Section */
 h1 {
-    color: #007BFF;
-    font-size: 2.5rem;
+    color: #0066cc;
+    font-size: 2.8rem;
+    font-weight: bold;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* Paragraph Styling */
 p {
-    margin: 10px 0;
-    font-size: 1rem;
+    margin: 15px 0;
+    font-size: 1.1rem;
     text-align: center;
+    color: #555;
 }
 
 /* Buttons */
 button {
-    padding: 12px 20px;
+    padding: 12px 25px;
     font-size: 1rem;
+    font-weight: bold;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 button[type="submit"] {
-    background-color: #007BFF;
+    background-color: #0066cc;
     color: #fff;
 }
 
 button[type="submit"]:hover {
-    background-color: #0056b3;
+    background-color: #004d99;
     transform: translateY(-2px);
 }
 
 button[type="button"] {
-    background-color: #dc3545;
+    background-color: #e63946;
     color: #fff;
 }
 
@@ -61,6 +67,7 @@ button[type="button"]:hover {
     background-color: #a71d2a;
     transform: translateY(-2px);
 }
+
 /* Delete Account Button Styling */
 .delete-account-link {
     position: absolute;
@@ -70,11 +77,11 @@ button[type="button"]:hover {
 }
 
 .delete-account-button {
-    background-color: #dc3545;
+    background-color: #e63946;
     color: #fff;
     border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
+    padding: 12px 20px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
     transition: background-color 0.3s ease, transform 0.2s ease;
@@ -82,9 +89,10 @@ button[type="button"]:hover {
 }
 
 .delete-account-button:hover {
-    background-color: #a71d2a;
+    background-color: #c91d2b;
     transform: translateY(-2px);
 }
+
 /* Logout Button Styling */
 .logout-form {
     position: absolute;
@@ -94,11 +102,11 @@ button[type="button"]:hover {
 }
 
 .logout-button {
-    background-color: #007BFF;
+    background-color: #0066cc;
     color: #fff;
     border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
+    padding: 12px 20px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
     transition: background-color 0.3s ease, transform 0.2s ease;
@@ -106,7 +114,7 @@ button[type="button"]:hover {
 }
 
 .logout-button:hover {
-    background-color: #0056b3;
+    background-color: #004d99;
     transform: translateY(-2px);
 }
 
@@ -114,24 +122,26 @@ button[type="button"]:hover {
 table {
     width: 100%;
     max-width: 1200px;
-    margin: 20px 0;
+    margin: 20px auto;
     border-collapse: collapse;
     background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
     overflow: hidden;
 }
 
 table thead {
-    background-color: #007BFF;
+    background-color: #0066cc;
     color: #fff;
+    font-weight: bold;
 }
 
 table th, table td {
-    padding: 12px;
+    padding: 15px;
     text-align: left;
     border: 1px solid #ddd;
     word-wrap: break-word;
+    font-size: 1rem;
 }
 
 table tbody tr:nth-child(even) {
@@ -148,9 +158,9 @@ div[id*="Chart"], div[id*="Table"] {
     width: 100%;
     max-width: 1200px;
     background-color: #fff;
-    padding: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
 }
 
 /* Inputs */
@@ -159,24 +169,27 @@ input[type="month"] {
     font-size: 1rem;
     margin: 10px 0;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    width: 200px;
+    border-radius: 8px;
+    width: 220px;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 input[type="month"]:focus {
-    border-color: #007BFF;
+    border-color: #0066cc;
     outline: none;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    box-shadow: 0 0 8px rgba(0, 102, 204, 0.3);
 }
 
 /* Link Styling */
 a {
     text-decoration: none;
-    color: #007BFF;
+    color: #0066cc;
+    font-weight: bold;
 }
 
 a:hover {
     text-decoration: underline;
+    color: #004d99;
 }
 
 /* Message Alerts */
@@ -184,16 +197,17 @@ a:hover {
     margin: 20px auto;
     width: 100%;
     max-width: 1200px;
-    padding: 15px;
-    border-radius: 8px;
-    background-color: #f8f9fa;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
 }
 
 .messages p {
-    margin: 5px 0;
+    margin: 8px 0;
     padding: 12px;
-    border-radius: 5px;
+    border-radius: 8px;
 }
 
 .messages .success {
@@ -229,7 +243,7 @@ a:hover {
 /* Responsive Design */
 @media (max-width: 768px) {
     body {
-        padding: 10px;
+        padding: 15px;
     }
 
     table {
@@ -246,7 +260,7 @@ a:hover {
 
     .flex {
         flex-direction: column;
-        gap: 10px;
+        gap: 15px;
     }
 }
 
@@ -256,11 +270,12 @@ a:hover {
     }
 
     p {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
 
     button {
         font-size: 0.8rem;
+        padding: 10px 15px;
     }
 
     table {
@@ -268,6 +283,6 @@ a:hover {
     }
 
     div[id*="Chart"], div[id*="Table"] {
-        padding: 10px;
+        padding: 15px;
     }
 }

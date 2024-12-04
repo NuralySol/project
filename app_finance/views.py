@@ -20,6 +20,8 @@ import logging
 import json
 import time
 from plaid.exceptions import ApiException
+from sklearn.linear_model import LinearRegression
+import numpy as np
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -236,3 +238,31 @@ def create_sandbox_item(request):
         logger.error(f"Error creating sandbox item: {e}", exc_info=True)
         return JsonResponse({"success": False, "error": str(e)})
 
+# Sample function for training and prediction for Linear Regression
+def train_and_predict(request):
+    # Example sorted data
+    sorted_data = [
+        {"month": 0, "total": 1000},
+        {"month": 1, "total": 1200},
+        {"month": 2, "total": 1400},
+        # Add more historical data here
+    ]
+
+    # Prepare data for training
+    months = np.array([entry["month"] for entry in sorted_data]).reshape(-1, 1)
+    totals = np.array([entry["total"] for entry in sorted_data])
+
+    # Train the Linear Regression model
+    model = LinearRegression()
+    model.fit(months, totals)
+
+    # Predict future expenditures
+    future_months = np.array(range(len(months), len(months) + 12)).reshape(-1, 1)
+    predictions = model.predict(future_months)
+
+    # Combine historical and predicted data for the frontend
+    historical_data = [{"month": int(month), "total": float(total)} for month, total in zip(months.flatten(), totals)]
+    future_data = [{"month": int(month), "total": float(total)} for month, total in zip(future_months.flatten(), predictions)]
+
+    # Return JSON response
+    return JsonResponse({"historical": historical_data, "predicted": future_data})

@@ -9,6 +9,19 @@
     <title>Sign Up</title>
 </head>
 <body class="signup-body">
+
+    <!-- Added background image within the body -->
+    <style>
+    .signup-body {
+        background-image: url("{% static 'assets/background_sign_up.png' %}");
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+        margin: 0;
+    }
+    </style>
+    <!-- Closed the assets/background.png access in the code -->
+
     <div class="signup-container">
         <header class="signup-header">
             <h1 class="signup-title">Sign Up</h1>

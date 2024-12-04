@@ -32,4 +32,5 @@ urlpatterns = [
     # API Endpoints RESTfull Django
     path('api/transactions/', TransactionListView.as_view(), name='api_transactions'),
     path('api/profile/', ProfileView.as_view(), name='api_profile'),
+    path('api/expenditure-projection/', views.train_and_predict, name='expenditure_projection'),
 ]

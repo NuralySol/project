@@ -3,7 +3,7 @@
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f1f5f9; /* Light background color */
+    background: linear-gradient(135deg, #e3f2fd, #e0f7fa); /* Calm gradient */
     color: #333;
     display: flex;
     justify-content: center;
@@ -17,16 +17,16 @@
     width: 100%;
     max-width: 400px;
     background-color: #ffffff;
-    padding: 40px 30px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
+    border-radius: 20px; /* Softer corners */
     text-align: center;
     animation: fadeIn 0.5s ease-in-out;
 }
 
 /* Header Styling */
 .login-header {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .login-title {
@@ -34,15 +34,17 @@
     color: #007bff;
     font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px; /* Improved spacing for elegance */
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* Enhanced text shadow */
 }
 
 /* Form Styling */
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px; /* Increased spacing for better readability */
     align-items: center;
+    width: 100%;
 }
 
 /* Form Group Styling */
@@ -62,36 +64,46 @@
 
 .form-input {
     width: 100%;
-    padding: 10px;
+    padding: 14px; /* Larger padding for comfort */
     font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    border: 1px solid #ddd;
+    border-radius: 10px; /* Softer corners */
+    background-color: #f9f9f9;
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .form-input:focus {
     border-color: #007bff;
     outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3); /* Stronger focus effect */
 }
 
 /* Button Styling */
 .btn-login {
     width: 100%;
-    padding: 12px;
-    font-size: 1rem;
+    max-width: 200px; /* Centers button and adjusts size */
+    padding: 15px; /* Increased padding for better touch area */
+    font-size: 1.2rem; /* Slightly larger font for emphasis */
     font-weight: bold;
     color: #ffffff;
     background-color: #007bff;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px; /* Softer corners for aesthetics */
     cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
 }
 
 .btn-login:hover {
     background-color: #0056b3;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* More dynamic hover effect */
+    transform: translateY(-3px); /* Lift effect on hover */
+}
+
+.btn-login:active {
+    background-color: #003f8a;
+    transform: translateY(0); /* Button press effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Signup Link Styling */
@@ -111,6 +123,7 @@
 .signup-link-text:hover {
     color: #0056b3;
     text-decoration: underline;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Slight text shadow */
 }
 
 /* Animation */
@@ -128,7 +141,7 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .login-container {
-        padding: 30px 20px;
+        padding: 30px;
     }
 
     .login-title {
@@ -136,10 +149,31 @@
     }
 
     .btn-login {
-        font-size: 0.9rem;
+        font-size: 1rem;
+        max-width: 180px; /* Adjust width for smaller screens */
     }
 
     .signup-link-text {
         font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 20px;
+    }
+
+    .login-title {
+        font-size: 1.8rem;
+    }
+
+    .btn-login {
+        font-size: 0.9rem;
+        padding: 12px;
+        max-width: 150px; /* Further adjust for mobile */
+    }
+
+    .signup-link-text {
+        font-size: 0.85rem;
     }
 }

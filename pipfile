@@ -9,6 +9,7 @@ pillow = "*"
 plaid-python = "*"
 python-dotenv = "*"
 djangorestframework = "*"
+scikit-learn = "*"
 
 [dev-packages]
 
