@@ -169,7 +169,6 @@ This project is licensed under the [MIT License](./LICENSE).
 - 🔄 Expand projection capabilities to use more advanced machine learning models.
 - 💵 Add user budgeting features with alerts for overspending.
 - 📊 Enhance the UI with additional visualizations like monthly trends or category breakdowns.
-- 🚀 Implement deployment using platforms like **Heroku** or **AWS** for wider accessibility.
 
 ---
 
