@@ -8,6 +8,7 @@ gunicorn = "*"
 django-heroku = "*"
 python-dotenv = "*"
 djangorestframework = "*"
+django-extensions = "*"
 
 [dev-packages]
 
