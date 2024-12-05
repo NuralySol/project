@@ -49,7 +49,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['https://finance-wiz-a35af9efb391.herokuapp.com/', '127.0.0.1']
+ALLOWED_HOSTS = ['finance-wiz-a35af9efb391.herokuapp.com', '127.0.0.1']
 # Login and logout settings, and redirection 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -104,17 +104,11 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 
-if os.getenv('DATABASE_URL'):
-    DATABASES = {
-        'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+DATABASES = {
+    'default': dj_database_url.config(
+        default='postgres://ua02aeo5h6dd4i:pe90603effa3ed69ee3c6d2ac6d921d7284fb912b050c4367c0eae9df53371fcd@caij57unh724n3.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d8lgl81qm7ajar'
+    )
+}
 
 
 # Password validation
