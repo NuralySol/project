@@ -10,6 +10,9 @@ plaid-python = "*"
 python-dotenv = "*"
 djangorestframework = "*"
 scikit-learn = "*"
+psycopg2-binary = "*"
+gunicorn = "*"
+whitenoise = "*"
 
 [dev-packages]
 

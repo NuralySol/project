@@ -25,7 +25,6 @@ media/
 # Dependencies
 Pipfile.lock
 poetry.lock
-requirements.txt
 
 # IDE/Editor files
 .vscode/
