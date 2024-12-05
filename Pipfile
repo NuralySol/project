@@ -10,6 +10,7 @@ python-dotenv = "*"
 djangorestframework = "*"
 django-extensions = "*"
 plaid-python = "*"
+scikit-learn = "*"
 
 [dev-packages]
 
