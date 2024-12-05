@@ -9,6 +9,7 @@ django-heroku = "*"
 python-dotenv = "*"
 djangorestframework = "*"
 django-extensions = "*"
+plaid-python = "*"
 
 [dev-packages]
 
