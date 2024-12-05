@@ -11,6 +11,8 @@ djangorestframework = "*"
 django-extensions = "*"
 plaid-python = "*"
 scikit-learn = "*"
+psycopg2-binary = "*"
+dj-database-url = "*"
 
 [dev-packages]
 
