@@ -173,3 +173,4 @@ This project is licensed under the [MIT License](./LICENSE).
 ---
 
 This project serves as a comprehensive demonstration of integrating third-party APIs, creating interactive dashboards, and building a data-driven financial application with Django. Let me know if you'd like further details on any specific aspect!
+

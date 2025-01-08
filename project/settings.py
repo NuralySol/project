@@ -105,14 +105,11 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgres://ua02aeo5h6dd4i:pe90603effa3ed69ee3c6d2ac6d921d7284fb912b050c4367c0eae9df53371fcd@caij57unh724n3.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d8lgl81qm7ajar',
-        conn_max_age=600,
-        password='pe90603effa3ed69ee3c6d2ac6d921d7284fb912b050c4367c0eae9df53371fcd',
-        username='ua02aeo5h6dd4i',
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
